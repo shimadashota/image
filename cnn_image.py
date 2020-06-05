@@ -24,18 +24,18 @@ with open('../data/out/data_z.pickle','rb') as f:
 with open('../data/out/data_w.pickle','rb') as f:
     test_imgs_model = pickle.load(f)
     test_label_model = pickle.load(f)
-#pdb.set_trace()
 # Training Parameters
 learning_rate = 0.001
 num_steps = 200
 batch_size = 5
 display_step = 10
+#pdb.set_trace()
 
 # Network Parameters
-num_input = 5242880 # MNIST data input (img shape: 28*28)
+num_input = 268203 # MNIST data input (img shape: 28*28)
 num_classes = 1 # MNIST total classes (0-9 digits)
 dropout = 1.00 # Dropout, probability to keep units
-
+#pdb.set_trace()
 print("Start loading data")
 #Xに合わせるためにreshapeする
 train_imgs_model = train_imgs_model.reshape(-1,num_input)
@@ -43,7 +43,7 @@ test_imgs_model = test_imgs_model.reshape(-1,num_input)
 train_label_model = train_label_model[:,np.newaxis]
 test_label_model = test_label_model[:,np.newaxis]
 
-
+#pdb.set_trace()
 # tf Graph input
 X = tf.placeholder(tf.float32, [None, num_input])
 Y = tf.placeholder(tf.float32, [None, num_classes])
@@ -53,6 +53,7 @@ keep_prob = tf.placeholder(tf.float32) # dropout (keep probability)
 # Create some wrappers for simplicity
 def conv2d(x, W, b, strides=1):
     # Conv2D wrapper, with bias and relu activation
+    #pdb.set_trace()
     x = tf.nn.conv2d(x, W, strides=[1, strides, strides, 1], padding='SAME')
     x = tf.nn.bias_add(x, b)
     return tf.nn.relu(x)
@@ -69,7 +70,7 @@ def conv_net(x, weights, biases, dropout):
     # MNIST data input is a 1-D vector of 784 features (28*28 pixels)
     # Reshape to match picture format [Height x Width x Channel]
     # Tensor input become 4-D: [Batch Size, Height, Width, Channel]
-    x = tf.reshape(x, shape=[-1, 2048, 2560, 4])
+    x = tf.reshape(x, shape=[-1, 299, 299, 3])
 
     # Convolution Layer
     conv1 = conv2d(x, weights['wc1'], biases['bc1'])
@@ -96,7 +97,7 @@ def conv_net(x, weights, biases, dropout):
 # Store layers weight & bias
 weights = {
     # 5x5 conv, 1 input, 32 outputs
-    'wc1': tf.Variable(tf.random_normal([5, 5, 4, 32])),
+    'wc1': tf.Variable(tf.random_normal([5, 5, 3, 32])),
     # 5x5 conv, 32 inputs, 64 outputs
     'wc2': tf.Variable(tf.random_normal([5, 5, 32, 64])),
     # fully connected, 7*7*64 inputs, 1024 outputs
@@ -138,6 +139,7 @@ with tf.Session() as sess:
     print("Srart training")
     for step in range(1, num_steps+1):
         print(f"{step} times")
+        pdb.set_trace()
         # Run optimization op (backprop)
         sess.run(train_op, feed_dict={X: train_imgs_model, Y: train_label_model, keep_prob: 0.8})
         print(f"finish {step} times")

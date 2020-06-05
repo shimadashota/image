@@ -11,19 +11,40 @@ from PIL import Image
 import pickle
 import cv2
 
+df = pd.read_csv("../../corporationClassifier/data/data_all.csv")
+
+link = df['link']
 image_title = []
-Z = glob.glob('../data/images/resize/*.png')
-for str in natsorted(Z):
-    image_title.append(str)
-#pdb.set_trace()
+Z = glob.glob('../data/images/images/*.png')
+for stra in natsorted(Z):
+    image_title.append(stra)
+
+#画像をリサイズ
+for i in range(len(link)):
+    if i<915:
+        s = str(i).zfill(5)
+        #pdb.set_trace()
+        im = cv2.imread('../data/images/images/{0}.png'.format(s))
+        im = cv2.resize(im, dsize=(299, 299))
+        img = cv2.imwrite('../data/images/resize/{0}.png'.format(s), im)
+    elif i==915:
+        continue
+    else:
+        s = str(i).zfill(5)
+    #pdb.set_trace()
+        im = cv2.imread('../data/images/images/{0}.png'.format(s))
+        im = cv2.resize(im, dsize=(299, 299))
+        t = str(i-1).zfill(5)
+        img = cv2.imwrite('../data/images/resize/{0}.png'.format(t), im)
+
+
+    #pdb.set_trace()
+
+"""
 df = pd.read_csv("../../corporationClassifier/data/data_all.csv") #load csv file
 y = df['class'] #0 or 1
 
 Y = np.array(y) #labelをnumpyに変換
-M = Y.tolist()
-N = M.pop(915)
-Y = np.array(M)
-
 image_title = np.array(image_title)
 # 全データ数
 nData = len(Z)
@@ -46,7 +67,7 @@ xTest = image_title[10:15]
 yTest = Y[10:15]
 
 
-"""
+
 xTrain = image_title[randInd[0:nTrain]]
 # 以下実装! 学習データ(出力、正解データ)
 yTrain = Y[randInd[0:nTrain]]
@@ -54,7 +75,7 @@ yTrain = Y[randInd[0:nTrain]]
 xTest = image_title[randInd[nTrain:]]
 # 以下実装! テストデータ(出力、正解データ)
 yTest = Y[randInd[nTrain:]]
-"""
+
 # 学習データ保存 -----------------------------------------------------------------
 label_list = []
 flag = False
@@ -109,3 +130,4 @@ for i,j in zip(xTest,yTest): # i:入力データ, j:出力データ
 with open('../data/out/data_w.pickle','wb') as f:
         pickle.dump(imgs,f)
         pickle.dump(test_label_list,f)
+"""
